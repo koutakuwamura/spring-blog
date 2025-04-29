@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>ログイン</title>
+	<link rel="stylesheet" type="text/css" href="/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+<body>
+	<header>
+		<h1>サンプルブログ</h1>
+	</header>
+	<main>
+		<p>ログイン</p>
+		<form action="/login" method="post"class="login-from">
+			<span th:text="${message}" style="color:red"></span><br />
+			<input type="text" name="name" placeholder="名前" /><br />
+			<input type="text" name="email" placeholder="メールアドレス" /><br />
+			<input type="text" name="password" placeholder="パスワード" /><br />
+			<button class="login-button">ログイン</button>
+		</form>
+		<a href="/users/new">ユーザー新規作成</a>
+	</main>
+</body>
+
+</html>

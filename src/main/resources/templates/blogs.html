@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>サンプルタスク</title>
+	<link rel="stylesheet" type="text/css" href="/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+
+<body>
+	<header th:replace="header"></header>
+
+	<nav>
+		<a href="/blogs">全ブログ</a>
+		<a th:each="c:${categories}" th:href="@{/blogs(categoryId=${c.id})}">
+			<span th:text="${c.name}"></span>
+		</a>
+	</nav>
+
+	<main>
+
+		<a href="/blogs/add" class="link-left">新規タスク作成</a>
+
+		<table>
+
+			<tr>
+				<th class="no">NO</th>
+				<th class="title">タイトル</th>
+				<th class="category">カテゴリー</th>
+				<th class="update">変更</th>
+				<th class="delete">削除</th>
+			</tr>
+
+
+			<tr th:each="blog:${blogs}" style="height: 45px;">
+				<td class="no" th:text="${blog.id}"></td>
+				<td class="title" th:text="${blog.title}"></td>
+<!--				Thymeleafでは条件分岐ができるので、th:if を使って以下のように書くとOKです：-->
+				<td class="category" name="categoryId" value="1" th:if="${blog.categoryId==1}">仕事</td>
+				<td class="category" name="categoryId" value="2" th:if="${blog.categoryId==2}">遊び</td>
+				<td class="category" name="categoryId" value="3" th:if="${blog.categoryId==3}">勉強</td>
+
+				<td class="update">
+					<form th:action="@{/blogs/{blogId}/edit(blogId=${blog.id})}" method="get">
+						<input type="hidden" name="id" th:value="${blog.id}">
+						<button class="blog-button">変更</button>
+					</form>
+				</td>
+				<td class="delete">
+					<form th:action="@{/blogs/{blogId}/delete(blogId=${blog.id})}" method="post"
+						th:id="'deleteForm-' + ${blog.id}">
+						<input type="hidden" name="id" th:value="${blog.id}">
+						<!-- 削除ボタン -->
+						<button class="blog-button" type="button"
+							th:onclick="'openModal(' + ${blog.id} + ')'">削除</button>
+
+						<!-- モーダル -->
+						<div th:id="'myModal-' + ${blog.id}" class="modal">
+
+							<div class="modalin">
+								<p style="text-align: left;">このページの内容</p>
+								<p style="text-align: left;  padding-top: 10px; padding-left: 5px;">タスクを削除します。よろしいですか？</p>
+								<div class="modal-button-row">
+									<button type="button" th:onclick="'confirmDelete(' + ${blog.id} + ')'"
+										class="btn-modalok">OK</button>
+									<button type="button" th:onclick="'closeModal(' + ${blog.id} + ')'"
+										class="btn-modalng" >キャンセル</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</td>
+			</tr>
+
+		</table>
+	</main>
+	<script>
+		function openModal(blogId) {
+			document.getElementById(`myModal-${blogId}`).style.display = "block";
+		}
+
+		function closeModal(blogId) {
+			document.getElementById(`myModal-${blogId}`).style.display = "none";
+		}
+
+		function confirmDelete(blogId) {
+			const form = document.getElementById(`deleteForm-${blogId}`);
+			if (form) {
+				form.submit(); // モーダルの中で「削除」押されたら送信
+			}
+		}
+	</script>
+
+
+</body>
+
+</html>
